@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Ajax.Utilities;
+using System;
+using System.Linq;
 
 namespace ObscureCalculator6.Models
 {
@@ -30,6 +32,38 @@ namespace ObscureCalculator6.Models
             return feet / StonesThrow;
         }
 
+ 
+   public static string TextTransformer(string x)
+        {
+            if (x.IsNullOrWhiteSpace())
+            {
+                return x;
+            }
+            return x + "_";
+        }
+
+        public Boolean IsPalendrome(string y)
+        {
+            if (string.IsNullOrEmpty(y) || string.IsNullOrWhiteSpace(y) || y.Length <= 1)
+            {
+                return false;
+            }
+            else
+            {
+
+                char[] array = y.ToCharArray();
+                Array.Reverse(array);
+                string reverse = "";
+                foreach (char tempChar in array)
+                {
+                    reverse += tempChar;
+                }
+                reverse = reverse.ToUpper();
+                return reverse.Equals(y.ToUpper());
+            }
+        }
+ 
+
         // I only trust him as far as I can throw him: Trust Calculate Method
         // Based on projected person weight, thrower weight, wind resistance 
         // and the throwee's consent to be thrown.
@@ -45,19 +79,20 @@ namespace ObscureCalculator6.Models
             {
                 throw new ArgumentException("Avoid divide by zero", "projectilePersonWeight");
             }
+            double trustInFeet;
+
             #endregion
-            double trustInFeet = 0;
 
             if (perpetratorWeight > projectilePersonWeight)
             {
                 trustInFeet = (perpetratorWeight / projectilePersonWeight) * 8;
                 if (consentToBeThrown)
                 {
-                    trustInFeet = trustInFeet + 2;
+                    trustInFeet += 2;
                 }
                 else
                 {
-                    trustInFeet = trustInFeet - 2;
+                    trustInFeet -= 2;
                 }
             }
             else
@@ -74,7 +109,7 @@ namespace ObscureCalculator6.Models
             }
 
             //Subtract wind resistance
-            trustInFeet = trustInFeet - windResistance;
+            trustInFeet -= windResistance;
 
             trustInFeet = technique.ThrowTechnique == "curling" ? trustInFeet + technique.Success : trustInFeet;
 
